@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zp.mapper.HospitalMapper" >
+  <resultMap id="BaseResultMap" type="com.zp.entity.Hospital" >
+    <id column="hid" property="hid" jdbcType="INTEGER" />
+    <result column="hName" property="hname" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    hid, hName, address, grade
+  </sql>
+  <!-- 按类型和所有 -->
+  <select id="sel_Hospital" resultType="com.zp.entity.Hospital" parameterType="String">
+  	SELECT COUNT(hospital) `count`,hname,address,grade FROM mediciner m,hospital h WHERE m.`hospital`=h.`hName` 
+  	<if test="grade!=null">
+  		and grade like "%"#{grade}"%"
+  	</if> 
+  	GROUP BY hospital
+  </select>
+  <!-- 所有医院 -->
+  <select id="allHospital" resultType="com.zp.entity.Hospital" parameterType="String">
+  	select * from hospital
+  	<where>
+  		<if test="hname!=null">
+  			and hname=#{hname}
+  		</if>
+  	</where>
+  </select>
+  <!-- 查医院挂号 -->
+  <select id="sel_Hname" resultType="com.zp.entity.Hospital" parameterType="String">
+  	SELECT * from hospital where hname=#{hname}
+  </select>
+  <!-- 推荐医院预约人数 -->
+  <select id="selTuijian" resultType="int" parameterType="String">
+	select count(visitSeq) `count` from `mediciner` m,appointment a where m.`mid`=a.`mId` and m.`hospital`=#{hname}  
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zp.entity.Hospital" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from hospital
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from hospital
+    where hid = #{hid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from hospital
+    where hid = #{hid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zp.entity.HospitalExample" >
+    delete from hospital
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zp.entity.Hospital" >
+    insert into hospital (hid, hName, address, 
+      grade)
+    values (#{hid,jdbcType=INTEGER}, #{hname,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{grade,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zp.entity.Hospital" >
+    insert into hospital
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="hid != null" >
+        hid,
+      </if>
+      <if test="hname != null" >
+        hName,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="hid != null" >
+        #{hid,jdbcType=INTEGER},
+      </if>
+      <if test="hname != null" >
+        #{hname,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zp.entity.HospitalExample" resultType="java.lang.Integer" >
+    select count(*) from hospital
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update hospital
+    <set >
+      <if test="record.hid != null" >
+        hid = #{record.hid,jdbcType=INTEGER},
+      </if>
+      <if test="record.hname != null" >
+        hName = #{record.hname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grade != null" >
+        grade = #{record.grade,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update hospital
+    set hid = #{record.hid,jdbcType=INTEGER},
+      hName = #{record.hname,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      grade = #{record.grade,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zp.entity.Hospital" >
+    update hospital
+    <set >
+      <if test="hname != null" >
+        hName = #{hname,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where hid = #{hid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zp.entity.Hospital" >
+    update hospital
+    set hName = #{hname,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=VARCHAR}
+    where hid = #{hid,jdbcType=INTEGER}
+  </update>
+</mapper>

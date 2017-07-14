@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zp.mapper.AppointmentMapper" >
+  <resultMap id="BaseResultMap" type="com.zp.entity.Appointment" >
+    <id column="aId" property="aid" jdbcType="INTEGER" />
+    <result column="uId" property="uid" jdbcType="INTEGER" />
+    <result column="patientId" property="patientid" jdbcType="VARCHAR" />
+    <result column="mId" property="mid" jdbcType="INTEGER" />
+    <result column="visitTime" property="visittime" jdbcType="VARCHAR" />
+    <result column="visitSeq" property="visitseq" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    aId, uId, patientId, mId, visitTime, visitSeq
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zp.entity.AppointmentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from appointment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from appointment
+    where aId = #{aid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from appointment
+    where aId = #{aid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zp.entity.AppointmentExample" >
+    delete from appointment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zp.entity.Appointment" >
+    insert into appointment (aId, uId, patientId, 
+      mId, visitTime, visitSeq
+      )
+    values (#{aid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{patientid,jdbcType=VARCHAR}, 
+      #{mid,jdbcType=INTEGER}, #{visittime,jdbcType=VARCHAR}, #{visitseq,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zp.entity.Appointment" >
+    insert into appointment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        aId,
+      </if>
+      <if test="uid != null" >
+        uId,
+      </if>
+      <if test="patientid != null" >
+        patientId,
+      </if>
+      <if test="mid != null" >
+        mId,
+      </if>
+      <if test="visittime != null" >
+        visitTime,
+      </if>
+      <if test="visitseq != null" >
+        visitSeq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="patientid != null" >
+        #{patientid,jdbcType=VARCHAR},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="visittime != null" >
+        #{visittime,jdbcType=VARCHAR},
+      </if>
+      <if test="visitseq != null" >
+        #{visitseq,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zp.entity.AppointmentExample" resultType="java.lang.Integer" >
+    select count(*) from appointment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update appointment
+    <set >
+      <if test="record.aid != null" >
+        aId = #{record.aid,jdbcType=INTEGER},
+      </if>
+      <if test="record.uid != null" >
+        uId = #{record.uid,jdbcType=INTEGER},
+      </if>
+      <if test="record.patientid != null" >
+        patientId = #{record.patientid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mid != null" >
+        mId = #{record.mid,jdbcType=INTEGER},
+      </if>
+      <if test="record.visittime != null" >
+        visitTime = #{record.visittime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visitseq != null" >
+        visitSeq = #{record.visitseq,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update appointment
+    set aId = #{record.aid,jdbcType=INTEGER},
+      uId = #{record.uid,jdbcType=INTEGER},
+      patientId = #{record.patientid,jdbcType=VARCHAR},
+      mId = #{record.mid,jdbcType=INTEGER},
+      visitTime = #{record.visittime,jdbcType=VARCHAR},
+      visitSeq = #{record.visitseq,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zp.entity.Appointment" >
+    update appointment
+    <set >
+      <if test="uid != null" >
+        uId = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="patientid != null" >
+        patientId = #{patientid,jdbcType=VARCHAR},
+      </if>
+      <if test="mid != null" >
+        mId = #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="visittime != null" >
+        visitTime = #{visittime,jdbcType=VARCHAR},
+      </if>
+      <if test="visitseq != null" >
+        visitSeq = #{visitseq,jdbcType=INTEGER},
+      </if>
+    </set>
+    where aId = #{aid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zp.entity.Appointment" >
+    update appointment
+    set uId = #{uid,jdbcType=INTEGER},
+      patientId = #{patientid,jdbcType=VARCHAR},
+      mId = #{mid,jdbcType=INTEGER},
+      visitTime = #{visittime,jdbcType=VARCHAR},
+      visitSeq = #{visitseq,jdbcType=INTEGER}
+    where aId = #{aid,jdbcType=INTEGER}
+  </update>
+  <!-- 添加预约信息 -->
+  <insert id="pro_set" parameterType="Map" statementType="CALLABLE">
+  	call pro_set(#{uid,mode=IN,jdbcType=INTEGER},
+  		#{mid,mode=IN,jdbcType=INTEGER},
+  		#{patientName,mode=IN,jdbcType=VARCHAR},
+  		#{time,mode=IN,jdbcType=VARCHAR},
+  		#{flag,mode=OUT,jdbcType=INTEGER}
+  	)
+  </insert>
+</mapper>
